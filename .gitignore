@@ -13,3 +13,5 @@
 *.xtr
 *.swp
 !**/Figs/*.pdf
+.marscode/
+*.exe
