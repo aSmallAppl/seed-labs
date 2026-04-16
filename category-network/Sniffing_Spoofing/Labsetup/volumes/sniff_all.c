@@ -53,7 +53,7 @@ int main() {
     // Step 2: 编译并设置过滤器
     // Task 2.1B: 不同过滤器（每次只启用一个）
     // 1. 捕获两个特定主机之间的ICMP数据包
-    char filter_exp[] = "icmp and host 10.9.0.5 and host 10.9.0.6";
+    char filter_exp[] = "icmp";
     // 2. 捕获目的端口在10-100之间的TCP数据包
     // char filter_exp[] = "tcp dst portrange 10-100";
     // 3. 基础ICMP过滤器
