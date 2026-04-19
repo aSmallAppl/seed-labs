@@ -34,8 +34,12 @@ int main() {
     struct bpf_program fp;
     bpf_u_int32 net;
 
-    // TODO: 替换为你的实验网络接口名
-    char *dev = "br-cfefbbe8c0e2";
+    char *dev = pcap_lookupdev(errbuf);
+    if (dev == NULL) {
+        fprintf(stderr, "Couldn't find default device: %s\n",
+            errbuf);
+        exit(EXIT_FAILURE);
+    }
     if (dev == NULL) {
         fprintf(stderr, "Couldn't find default device: %s\n",
             errbuf);
@@ -53,11 +57,11 @@ int main() {
     // Step 2: 编译并设置过滤器
     // Task 2.1B: 不同过滤器（每次只启用一个）
     // 1. 捕获两个特定主机之间的ICMP数据包
-    char filter_exp[] = "icmp and host 10.9.0.5 and host 10.9.0.6";
+    // char filter_exp[] = "icmp and host 10.9.0.5 and host 10.9.0.6";
     // 2. 捕获目的端口在10-100之间的TCP数据包
     // char filter_exp[] = "tcp dst portrange 10-100";
     // 3. 基础ICMP过滤器
-    // char filter_exp[] = "icmp";
+    char filter_exp[] = "icmp";
 
     if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
         fprintf(stderr, "过滤器编译失败: %s\n", pcap_geterr(handle));

@@ -1,6 +1,7 @@
+import sys
 from scapy.all import *
 a = IP()
-a.dst = '10.9.0.5'
+a.dst = sys.argv[1]
 
 b = ICMP()
 p = a/b 

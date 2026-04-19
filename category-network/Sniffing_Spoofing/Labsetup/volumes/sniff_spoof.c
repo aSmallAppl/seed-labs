@@ -111,7 +111,7 @@ int main() {
     bpf_u_int32 net;
 
     // TODO: 替换为你的实验网络接口名
-    char *dev = "br-cfefbbe8c0e2";
+    char *dev = "br-d96734b3a6af";
 
     // 创建原始套接字
     sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);

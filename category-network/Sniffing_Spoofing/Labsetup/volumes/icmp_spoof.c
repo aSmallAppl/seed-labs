@@ -28,7 +28,13 @@ unsigned short checksum(unsigned short *buf, int len) {
     return (unsigned short)(~sum);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    // 检查命令行参数
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s <src_ip> <dst_ip>\n", argv[0]);
+        return 1;
+    }
+
     int sockfd;
     char buffer[PACKET_LEN];
     struct ip *ip_hdr;
@@ -55,10 +61,21 @@ int main() {
     ip_hdr->ip_off = 0;                   // 片偏移
     ip_hdr->ip_ttl = 64;                  // TTL
     ip_hdr->ip_p = IPPROTO_ICMP;          // 协议：ICMP
-    // TODO: 伪造源IP
-    inet_pton(AF_INET, "10.9.0.9", &(ip_hdr->ip_src));
-    // TODO: 目的IP（可以是8.8.8.8或hostA 10.9.0.5）
-    inet_pton(AF_INET, "8.8.8.8", &(ip_hdr->ip_dst));
+    
+    // 从命令行参数设置源IP
+    if (inet_pton(AF_INET, argv[1], &(ip_hdr->ip_src)) <= 0) {
+        perror("无效的源IP地址");
+        close(sockfd);
+        return 1;
+    }
+    
+    // 从命令行参数设置目的IP
+    if (inet_pton(AF_INET, argv[2], &(ip_hdr->ip_dst)) <= 0) {
+        perror("无效的目的IP地址");
+        close(sockfd);
+        return 1;
+    }
+    
     // IP校验和（内核会自动计算，这里可以不填）
     ip_hdr->ip_sum = 0;
 
@@ -85,6 +102,7 @@ int main() {
         close(sockfd);
         return 1;
     }
+    
     char src_ip[INET_ADDRSTRLEN];
     char dst_ip[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &(ip_hdr->ip_src), src_ip, INET_ADDRSTRLEN);

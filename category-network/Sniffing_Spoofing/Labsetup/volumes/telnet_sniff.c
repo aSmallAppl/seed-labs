@@ -58,7 +58,12 @@ int main() {
     bpf_u_int32 net;
 
     // TODO: 替换为你的实验网络接口名
-    char *dev = "br-cfefbbe8c0e2";
+    char *dev = pcap_lookupdev(errbuf);
+    if (dev == NULL) {
+        fprintf(stderr, "Couldn't find default device: %s\n",
+            errbuf);
+        exit(EXIT_FAILURE);
+    }
 
     handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
     if (handle == NULL) {

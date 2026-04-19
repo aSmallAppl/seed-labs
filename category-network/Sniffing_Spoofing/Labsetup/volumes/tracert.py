@@ -1,7 +1,8 @@
+import sys
 from scapy.all import *
 
 # 目标 IP
-target = "110.242.74.102"
+target = sys.argv[1]
 
 print(f"Traceroute to {target}")
 
